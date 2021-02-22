@@ -1,6 +1,9 @@
 from django.shortcuts import render
 
 from .forms import ApplicationForm
+from .models import *
+from .filters import OrderFilter
+
 
 # Extra Imports for the Login and Logout Capabilities
 from django.contrib.auth import authenticate, login, logout
@@ -45,4 +48,40 @@ def new_application(request):
     return render(request,'applications/newapp.html',
                           {'application_form':application_form,
                            'registered':registered})
+
+
+def all_applications(request):
+
+    applications = Application.objects.all()
+    #orders = customer.order_set.all()
+    total_applications = applications.count()
+    delivered = applications.filter(status='Delivered').count()
+    pending = applications.filter(status='Pending').count()
+
+
+    #tableFilter = OrderFilter(request.GET, queryset=orders)
+    #orders = myFilter.qs
+    context = {'applications': applications, 'delivered': delivered, 'pendind': pending}
+    return render(request, 'applications/all_applications.html', context)
+
+
+
+
+
+
+#######################
+def customer(request, pk_test):
+	customer = Customer.objects.get(id=pk_test)
+
+	orders = customer.order_set.all()
+	order_count = orders.count()
+
+	myFilter = OrderFilter(request.GET, queryset=orders)
+	orders = myFilter.qs
+
+	context = {'customer':customer, 'orders':orders, 'order_count':order_count,
+	'myFilter':myFilter}
+	return render(request, 'applications/customer.html',context)
+
+    #return render(request, 'applications/all_applications.html')
 # Create your views here.
