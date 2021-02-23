@@ -53,35 +53,37 @@ def new_application(request):
 def all_applications(request):
 
     applications = Application.objects.all()
+
     #orders = customer.order_set.all()
     total_applications = applications.count()
     delivered = applications.filter(status='Delivered').count()
     pending = applications.filter(status='Pending').count()
 
+    myFilter = OrderFilter(request.GET, queryset=applications)
+    applications=myFilter.qs
+
 
     #tableFilter = OrderFilter(request.GET, queryset=orders)
     #orders = myFilter.qs
-    context = {'applications': applications, 'delivered': delivered, 'pendind': pending}
+    context = {'applications': applications, 'delivered': delivered, 'pendind': pending , 'myFilter':myFilter}
     return render(request, 'applications/all_applications.html', context)
 
 
 
+def updateOrder(request, pk):
+
+    registered = False
+    order = Application.objects.get(id=pk)
+    form = ApplicationForm(instance=order)
 
 
+    if request.method == 'POST':
+        form = ApplicationForm(request.POST, instance=order)
+        if form.is_valid():
+            form.save()
+            registered = True
 
-#######################
-def customer(request, pk_test):
-	customer = Customer.objects.get(id=pk_test)
-
-	orders = customer.order_set.all()
-	order_count = orders.count()
-
-	myFilter = OrderFilter(request.GET, queryset=orders)
-	orders = myFilter.qs
-
-	context = {'customer':customer, 'orders':orders, 'order_count':order_count,
-	'myFilter':myFilter}
-	return render(request, 'applications/customer.html',context)
-
+    context = {'form':form, 'registered':registered}
+    return render(request, 'applications/order_form.html', context)
     #return render(request, 'applications/all_applications.html')
 # Create your views here.

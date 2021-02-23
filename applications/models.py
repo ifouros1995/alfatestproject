@@ -1,4 +1,24 @@
 from django.db import models
+from jsonfield import JSONField
+from multiselectfield import MultiSelectField
+from django.contrib.admin.widgets import AdminDateWidget
+
+class Trial(models.Model):
+	STATUS = (
+				('Pending', 'Pending'),
+				('Out for delivery', 'Out for delivery'),
+				('Delivered', 'Delivered'),
+				)
+
+	name = models.CharField(max_length=200, null=True)
+	status = models.CharField(max_length=200, null=True, choices=STATUS)
+
+
+
+	def __str__(self):
+		return self.name
+
+
 
 class Customer(models.Model):
 	name = models.CharField(max_length=200, null=True)
@@ -52,19 +72,35 @@ class Order(models.Model):
 
 class Application(models.Model):
 
-    STATUS=(
-        ('Pending', 'Pending'),
+	MY_CHOICES = (('item_key1', 'Item title 1.1'),
+              ('item_key2', 'Item title 1.2'),
+              ('item_key3', 'Item title 1.3'),
+              ('item_key4', 'Item title 1.4'),
+              ('item_key5', 'Item title 1.5'))
+
+	TESTS=(
+	    ('ΥΓΕΙΑ', 'ΥΓΕΙΑ'),
+	    ('ΠΛΑΣΤΙΚΟΤΗΤΑ', 'ΠΛΑΣΤΙΚΟΤΗΤΑ'),
+	    ('ΕΙΣΚΟΜΙΣΗ ΜΗΤΡΩΝ', 'ΕΙΣΚΟΜΙΣΗ ΜΗΤΡΩΝ'),
+		('ΘΡΑΥΣΗ ΔΟΚΙΜΙΩΝ', 'ΘΡΑΥΣΗ ΔΟΚΙΜΙΩΝ')
+		)
+
+	STATUS=(
+		('Pending', 'Pending'),
         ('Out for delivery', 'Out for delivery'),
         ('Delivered', 'Delivered')
-    )
-
-    customer = models.ForeignKey(Customer, null=True, on_delete= models.SET_NULL)
-    protocol_number = models.IntegerField()
-    name = models.CharField(max_length=264,unique=True)
-    address = models.CharField(max_length=264,unique=True)
-    date = models.DateField(auto_now=True)
-    status = models.CharField(max_length=200, null=True, choices=STATUS)
+		)
 
 
-    def __str__(self):
-        return self.name
+    #customer = models.ForeignKey(Customer, null=True, on_delete= models.SET_NULL)
+	protocol_number = models.IntegerField()
+	name = models.CharField(max_length=264,unique=True)
+	address = models.CharField(max_length=264,unique=True)
+	date = models.DateField(auto_now=True)
+	tests = models.CharField(max_length=200, null=True, choices=TESTS)
+	status = models.CharField(max_length=200, null=True, choices=STATUS)
+	status_list = MultiSelectField(choices=MY_CHOICES,null=True)
+
+
+	def __str__(self):
+		return self.name
