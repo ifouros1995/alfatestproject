@@ -1,6 +1,7 @@
 body {
     position: relative;
     overflow-x: hidden;
+    background-color: #ebeff5;
 }
 body,
 html { height: 100%;}
@@ -11,6 +12,8 @@ html { height: 100%;}
 /*-------------------------------*/
 /*           Wrappers            */
 /*-------------------------------*/
+
+
 
 #wrapper {
     padding-left: 0;

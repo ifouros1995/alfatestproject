@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from .forms import UserForm,UserProfileInfoForm
+from applications.models import *
 
 # Extra Imports for the Login and Logout Capabilities
 from django.contrib.auth import authenticate, login, logout
@@ -9,7 +10,15 @@ from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def index(request):
-    return render(request,'basic_app/homepage.html')
+    applications = Application.objects.all()
+
+    #orders = customer.order_set.all()
+    total_applications = applications.count()
+    delivered = applications.filter(status='Delivered').count()
+    pending = applications.filter(status='Pending').count()
+
+    context = {'total_applications': total_applications, 'delivered': delivered, 'pending': pending }
+    return render(request,'basic_app/homepage.html', context)
 
 @login_required
 def special(request):
