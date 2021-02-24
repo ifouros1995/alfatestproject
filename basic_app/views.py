@@ -7,6 +7,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 
 # Create your views here.
 def index(request):
@@ -17,7 +18,13 @@ def index(request):
     delivered = applications.filter(status='Delivered').count()
     pending = applications.filter(status='Pending').count()
 
-    context = {'total_applications': total_applications, 'delivered': delivered, 'pending': pending }
+
+    paginator = Paginator(applications, 5)
+    page_obj = paginator.page(request.GET.get('page', '1'))
+
+
+
+    context = {'pages':page_obj,'applications':applications,'total_applications': total_applications, 'delivered': delivered, 'pending': pending }
     return render(request,'basic_app/homepage.html', context)
 
 @login_required

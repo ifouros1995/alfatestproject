@@ -9,6 +9,7 @@ from .filters import OrderFilter
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
+from django.core.paginator import Paginator
 #from django.contrib.auth.decorators import login_required
 
 
@@ -63,9 +64,14 @@ def all_applications(request):
     applications=myFilter.qs
 
 
+    paginator = Paginator(applications, 5) # Show 25 contacts per page.
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     #tableFilter = OrderFilter(request.GET, queryset=orders)
     #orders = myFilter.qs
-    context = {'applications': applications, 'delivered': delivered, 'pendind': pending , 'myFilter':myFilter}
+    context = {'page_obj': page_obj, 'applications': applications, 'delivered': delivered, 'pendind': pending , 'myFilter':myFilter}
     return render(request, 'applications/all_applications.html', context)
 
 

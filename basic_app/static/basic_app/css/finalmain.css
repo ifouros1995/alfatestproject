@@ -7,6 +7,12 @@ body{
   text-align: center;
 }
 
+.nav-link {
+
+  font-size: 25px !important;
+
+
+}
 .center {
   display: block;
   margin-left: auto;

@@ -92,6 +92,8 @@ class Application(models.Model):
 		)
 
 
+
+
     #customer = models.ForeignKey(Customer, null=True, on_delete= models.SET_NULL)
 	protocol_number = models.IntegerField()
 	name = models.CharField(max_length=264,unique=True)
@@ -100,6 +102,11 @@ class Application(models.Model):
 	tests = models.CharField(max_length=200, null=True, choices=TESTS)
 	status = models.CharField(max_length=200, null=True, choices=STATUS)
 	status_list = MultiSelectField(choices=MY_CHOICES,null=True)
+
+	class Meta:
+		ordering = ['-date']
+
+
 
 
 	def __str__(self):
